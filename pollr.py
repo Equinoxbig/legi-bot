@@ -15,6 +15,7 @@ import os
 # Then use the token and secret that you get from it by connecting with your "bot" account
 # Then store them in a .json file named credentials.json
 
+# Loads the credentials from a json file in order to use them in Oauth
 with open('credentials.json') as config_creditentials:
     CREDENTIALS = json.load(config_creditentials)
 
@@ -22,19 +23,6 @@ with open('credentials.json') as config_creditentials:
     ACCESS_TOKEN_SECRET = CREDENTIALS['ACCESS_TOKEN_SECRET']
     IPHONE_CONSUMER_KEY = CREDENTIALS['IPHONE_CONSUMER_KEY']
     IPHONE_CONSUMER_SECRET = CREDENTIALS['IPHONE_CONSUMER_SECRET']
-
-
-# Tweet parameters
-# We're using static data on this bot as it will be same
-# poll over and over (only the subject will change)
-tweet_text = 'Qu\'auriez vous voté ?'
-card = {
-    'twitter:string:choice1_label': 'Pour',
-    'twitter:string:choice2_label': 'Contre',
-    'twitter:long:duration_minutes': 1440,
-    'twitter:api:api:endpoint': '1',
-    'twitter:card': 'poll2choice_text_only',
-}
 
 
 # Spoofing the requests
@@ -62,20 +50,31 @@ api = Twitter(auth=auth)
 caps_api = Twitter(domain='caps.twitter.com', api_version='v2', auth=auth)
 
 
-# Generating the poll card from the twitter API before posting it as
-# a tweet parameter
-# https://caps.twitter.com/v2/cards/create.json?card_data=...&send_error_codes=1
+def tweet_poll(text, choice1, choice2):
+    # Tweet parameters
+    poll_text = text
+    poll_card = {
+        'twitter:string:choice1_label': choice1,
+        'twitter:string:choice2_label': choice2,
+        'twitter:long:duration_minutes': 1440,
+        'twitter:api:api:endpoint': '1',
+        'twitter:card': 'poll2choice_text_only',
+    }
 
-card_data = caps_api.cards.create(
-    card_data=json.dumps(card),
-    send_error_codes=1)
+    # Generating the poll card from the twitter API before posting it as
+    # a tweet parameter
+    # https://caps.twitter.com/v2/cards/create.json?card_data=...&send_error_codes=1
+    card_data = caps_api.cards.create(
+        card_data=json.dumps(poll_card),
+        send_error_codes=1)
+
+    # Sending the tweet to twitter using the card generated above
+    # https://api.twitter.com/1.1/statuses/update.json?status=...&card_uri=...&cards_platform=iPhone-13&include_cards=1
+    api.statuses.update(
+        status=poll_text,
+        card_uri=card_data['card_uri'],
+        cards_platform='iPhone-13',
+        include_cards=1)
 
 
-# Sending the tweet to twitter using the card generated above
-# https://api.twitter.com/1.1/statuses/update.json?status=...&card_uri=...&cards_platform=iPhone-13&include_cards=1
-
-api.statuses.update(
-    status=tweet_text,
-    card_uri=card_data['card_uri'],
-    cards_platform='iPhone-13',
-    include_cards=1)
+tweet_poll(text="Ceci est un test", choice1="Test1", choice2="test2")
