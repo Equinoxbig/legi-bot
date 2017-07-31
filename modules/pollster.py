@@ -18,14 +18,8 @@ def tweet_poll(api, caps_api, text, choice1, choice2):
     # Generating the poll card from the twitter API before posting it as
     # a tweet parameter
     # https://caps.twitter.com/v2/cards/create.json?card_data=...&send_error_codes=1
-    card_data = caps_api.cards.create(
-        card_data=json.dumps(poll_card),
-        send_error_codes=1)
+    card_data = caps_api.cards.create(card_data=json.dumps(poll_card), send_error_codes=1)
 
     # Sending the tweet to twitter using the card generated above
     # https://api.twitter.com/1.1/statuses/update.json?status=...&card_uri=...&cards_platform=iPhone-13&include_cards=1
-    api.statuses.update(
-        status=poll_text,
-        card_uri=card_data['card_uri'],
-        cards_platform='iPhone-13',
-        include_cards=1)
+    api.statuses.update(status=poll_text, card_uri=card_data['card_uri'], cards_platform='iPhone-13', include_cards=1)

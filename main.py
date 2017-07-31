@@ -4,7 +4,9 @@
 # Importing libraries
 from twitter import *
 import json
-import pollster
+
+# Importing modules
+from modules import handler
 
 # Guide on how to get your tokens
 # The IPHONE key and secret can be found here : https://gist.github.com/shobotch/5160017
@@ -45,8 +47,7 @@ class SpoofOAuth(OAuth):
 
 
 # Generating "fake" Oauth
-auth = SpoofOAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
-                  IPHONE_CONSUMER_KEY, IPHONE_CONSUMER_SECRET)
+auth = SpoofOAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, IPHONE_CONSUMER_KEY, IPHONE_CONSUMER_SECRET)
 
 
 # Connecting to APIs
@@ -54,8 +55,4 @@ api = Twitter(auth=auth)
 caps_api = Twitter(domain='caps.twitter.com', api_version='v2', auth=auth)
 
 
-# pollster.tweet_poll(api=api,
-#                    caps_api=caps_api,
-#                    text="Test12",
-#                    choice1="Test1",
-#                    choice2="Test2")
+handler.cycle(api=api, caps_api=caps_api)
