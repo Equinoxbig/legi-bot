@@ -1,9 +1,10 @@
-# Code inspired and based on @fourtonfish's script
+# Code inspired and based on @fourtonfish 's script
 # Code can be found here : https://gist.github.com/fourtonfish/5ac885e5e13e6ca33dca9f8c2ef1c46e
 
 # Importing libraries
 from twitter import *
 import json
+import rethinkdb as r
 
 # Importing modules
 from modules import handler
@@ -26,6 +27,17 @@ with open('credentials.json') as config_credentials:
     ACCESS_TOKEN_SECRET = CREDENTIALS['ACCESS_TOKEN_SECRET']
     IPHONE_CONSUMER_KEY = CREDENTIALS['IPHONE_CONSUMER_KEY']
     IPHONE_CONSUMER_SECRET = CREDENTIALS['IPHONE_CONSUMER_SECRET']
+
+
+# Setting up connection to the database
+# https://www.rethinkdb.com/docs/guide/python/ for more informations
+with open('config.json') as config_db:
+    DB_CONFIG = json.load(config_db)
+
+    PORT = DB_CONFIG['PORT']
+    HOST = DB_CONFIG['HOST']
+
+    r.connect(HOST, PORT).repl()
 
 
 # Spoofing requests to twitter
@@ -54,5 +66,5 @@ auth = SpoofOAuth(ACCESS_TOKEN, ACCESS_TOKEN_SECRET, IPHONE_CONSUMER_KEY, IPHONE
 api = Twitter(auth=auth)
 caps_api = Twitter(domain='caps.twitter.com', api_version='v2', auth=auth)
 
-
-handler.cycle(api=api, caps_api=caps_api)
+# Actual bot code situated in ./modules/handler.py
+handler.cycle(api=api, caps_api=caps_api, r=r)
