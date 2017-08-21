@@ -28,6 +28,7 @@ def get_amendement(id_amdt):
     amdt = response['data_table'][0].split('|')
 
     # Clean la description de l'encodage des caracteres et des tags html
+    amdt[5] = amdt[5].replace('</p>', ' ')
     amdt[5] = re.sub(r"\<(.*?)\>", "", amdt[5])
     amdt[5] = html_charset.unescape(amdt[5])
 
@@ -62,7 +63,7 @@ def get_amendements_list():
             'id': result[0],
             'dossier': {
                 'numero': result[1],
-                'titre': result[2],
+                'titre': html_charset.unescape(result[2]),
                 'url': result[3]  # Exemple : http://www.assemblee-nationale.fr/15/dossiers/retablissement_confiance_action_publique.asp
             },
             'type': html_charset.unescape(result[4]),
@@ -70,8 +71,8 @@ def get_amendements_list():
                 'numero': result[5],
                 'url': result[6]  # Exemple : http://www.assemblee-nationale.fr/15/amendements/TA0017/AN/24.asp
             },
-            'article': result[7],
-            'alinea': result[8],
+            'article': html_charset.unescape(result[7]),
+            'alinea': html_charset.unescape(result[8]),
             'date_depot': html_charset.unescape(result[9]),
             'cosignataire': html_charset.unescape(result[10]),
             'sort': html_charset.unescape(result[11]),
