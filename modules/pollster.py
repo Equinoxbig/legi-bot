@@ -4,7 +4,7 @@ import json
 
 # Function used to tweet a poll taking an twitter API connection
 # and a cards API access
-def tweet_poll(api, caps_api, text, choice1, choice2):
+def tweet_poll(api, caps_api, text, choice1, choice2, reply_id):
     # Tweet parameters
     poll_text = text
     poll_card = {
@@ -23,4 +23,4 @@ def tweet_poll(api, caps_api, text, choice1, choice2):
     # Sending the tweet to twitter using the card generated above
     # using return to get the response object from twitter
     # https://api.twitter.com/1.1/statuses/update.json?status=...&card_uri=...&cards_platform=iPhone-13&include_cards=1
-    return api.statuses.update(status=poll_text, card_uri=card_data['card_uri'], cards_platform='iPhone-13', include_cards=1)
+    return api.statuses.update(status=poll_text, card_uri=card_data['card_uri'], cards_platform='iPhone-13', include_cards=1, in_reply_to_status_id=reply_id)

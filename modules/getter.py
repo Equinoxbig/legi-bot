@@ -3,6 +3,7 @@ import requests
 import json
 from html.parser import HTMLParser
 import re
+import time
 
 # Utilise pour virer l'encodage HTML de certains caracteres (exemple: "A" majuscule accent grave)
 html_charset = HTMLParser()
@@ -32,12 +33,8 @@ def get_amendement(id_amdt):
 
     return {
         'id': amdt[0],
-        'dossier': {
-            'titre': amdt[1],
-            'url': amdt[2],
-        },
-        'url_texte': amdt[3],
-        'url_compte_rendu': amdt[4],
+        'url_texte': amdt[3],  # Exemple : http://www.assemblee-nationale.fr/15/textes/TA0017.asp#D_Article_5
+        'url_compte_rendu': amdt[4],  # Exemple : manquant
         'description': amdt[5]
     }
 
@@ -66,19 +63,23 @@ def get_amendements_list():
             'dossier': {
                 'numero': result[1],
                 'titre': result[2],
-                'url': result[3]
+                'url': result[3]  # Exemple : http://www.assemblee-nationale.fr/15/dossiers/retablissement_confiance_action_publique.asp
             },
-            'type': result[4],
+            'type': html_charset.unescape(result[4]),
             'amdt': {
                 'numero': result[5],
-                'url': result[6]
+                'url': result[6]  # Exemple : http://www.assemblee-nationale.fr/15/amendements/TA0017/AN/24.asp
             },
             'article': result[7],
             'alinea': result[8],
-            'date_depot': result[9],
+            'date_depot': html_charset.unescape(result[9]),
             'cosignataire': html_charset.unescape(result[10]),
-            'sort': result[11],
-            'mission': result[12]
+            'sort': html_charset.unescape(result[11]),
+            'mission': html_charset.unescape(result[12]),
+            'tweet': {
+                'date': time.time() * 1000,
+                'id': ''
+            }
         }
 
     return response['data_table']
