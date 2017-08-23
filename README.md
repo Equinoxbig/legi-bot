@@ -3,9 +3,12 @@
 Legi-bot est un bot twitter relayant (dans la mesure du possible) en temps réel les votes de l'assemblée nationale sur twitter
 en donnant des informations telles que la date de dépôt, le sort de l'amendement et des liens vers les ressources.
 
+[F.A.Q](https://github.com/Equinoxbig/legi-bot/wiki/F.A.Q)
+
 ### Inspiration
 
 * [Accropolis](https://accropolis.fr) - Informations politiques quotidiennes
+* [nosdeputes.fr](https://nosdeputes.fr) - Utilisation des onnées de l'assemblée nationale
 * [Data Gueule](https://www.youtube.com/user/datagueule) - Travaux sur la démocratie
 * [fourtonfish](https://github.com/fourtonfish) - [Code pour les sondages twitter](https://gist.github.com/fourtonfish/5ac885e5e13e6ca33dca9f8c2ef1c46e)
 
@@ -38,6 +41,8 @@ Une fois le tout installé, créez un fichier `credentials.json` et entrez y vos
     "ACCESS_TOKEN_SECRET": ""
 }
 ```
+
+Il est aussi possible de modifier le fichier `config.json` avec vos paramètres rethinkDB.
 
 ## Test
 
