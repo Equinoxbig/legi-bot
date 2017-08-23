@@ -29,7 +29,7 @@ def cycle(api, caps_api, r):
         if not amd:
             # Si l'amendement a ete adopte ou rejete (que le choix a ete fait)
             if (amendement['sort'].lower().startswith('rejet')) or (amendement['sort'].lower().startswith('adopt')):
-                # Pour pas spam les requetes meme si le traffic doit pas etre archi important
+                # ratelimit que je me suis imposé pour pas trop spam le site de l'AN
                 time.sleep(5)
                 process_amendement(amd=amendement, r=r)
 
@@ -114,9 +114,8 @@ def process_amendement(amd, r):
 def post_on_twitter(api, caps_api, r):
     print('Démarrage de l\'envoi des tweets !')
     while True:
-        # Pour eviter les ratelimits et ne pas
-        # eteindre le programme instantanement
-        time.sleep(60)
+        # Pour eviter les ratelimits twitter (100 req/h)
+        time.sleep(40)
 
         # Poster le tweet puis le supprimer de la liste
         if tweets:

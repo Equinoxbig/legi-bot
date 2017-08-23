@@ -1,3 +1,4 @@
-rethinkdb==2.3.0.post6
+pyshorteners==0.6.1
 requests==2.13.0
+rethinkdb==2.3.0.post6
 python_twitter==3.3
