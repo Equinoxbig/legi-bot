@@ -11,6 +11,7 @@ tweets = []
 res = {
     'id': None
 }
+cache = {}
 
 # Utilise pour raccourcir les liens
 shortener = Shortener('Isgd')
@@ -76,10 +77,19 @@ def process_amendement(amd, r):
             tweet.append(word)
     """
     # Ajouter les liens
-    tweet.append('Liens :\n- Amendement: {}\n- Dossier: {}\n- Texte: {}'.format(shortener.short(amd['amdt']['url']),
-                                                                                shortener.short(amd['dossier']['url']),
-                                                                                shortener.short(amd['url_texte'])))
+    # avec un cache pour pas refaire les meme requests a is.gd
 
+    link_amd = cache[amd['amdt']['url']] if amd['amdt']['url'] in cache else shortener.short(amd['amdt']['url'])
+    link_dossier = cache[amd['dossier']['url']] if amd['dossier']['url'] in cache else shortener.short(amd['dossier']['url'])
+    link_texte = cache[amd['url_texte']] if amd['url_texte'] in cache else shortener.short(amd['url_texte'])
+
+    tweet.append('Liens :\n- Amendement: {}\n- Dossier: {}\n- Texte: {}'.format(link_amd, link_dossier, link_texte))
+
+    cache[amd['amdt']['url']] = link_amd
+    cache[amd['dossier']['url']] = link_dossier
+    cache[amd['url_texte']] = link_texte
+
+    # Ajouter le tweet a la liste de tweets a poster
     for (index, message) in enumerate(tweet):
         msg = '[{}/{}] | {}'.format(str(index + 1), str(len(tweet) + 1), message)
         to_tweet = {
