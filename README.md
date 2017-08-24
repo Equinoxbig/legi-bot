@@ -102,4 +102,4 @@ Jetez un oeil à la liste de [contributeurs](https://github.com/Equinoxbig/legi-
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+See the [LICENSE.md](LICENSE.md) file for details
