@@ -42,7 +42,40 @@ Une fois le tout installé, créez un fichier `credentials.json` et entrez y vos
 }
 ```
 
-Il est aussi possible de modifier le fichier `config.json` avec vos paramètres rethinkDB.
+### Configuration rethinkDB
+
+Commencez par modifier le fichier `config.json` avec vos paramètres rethinkDB si nécessaire.
+Créez une base de données `legibot` et à l'intérieur, une table `amendements`
+
+La structure des objets qui y seront stockés :
+```
+{
+    "alinea": "",
+    "amdt": {
+      "numero": "",
+      "url": ""
+    },
+    "article": "",
+    "cosignataire": "",
+    "date_depot": "",
+    "description": "",
+    "dossier": {
+      "numero": "",
+      "titre": "",
+      "url": ""
+    },
+    "id": "",
+    "mission": "",
+    "sort": "",
+    "tweet": {
+      "date": 0,
+      "id": ""
+    },
+    "type": "",
+    "url_compte_rendu": "",
+    "url_texte": ""
+}
+```
 
 ## Test
 
