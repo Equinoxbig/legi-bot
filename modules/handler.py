@@ -55,7 +55,8 @@ def process_amendement(amd, r):
 
     r.db('legibot').table('amendements').insert(amd).run()
 
-    amd_to_string = 'Dossier - {}\nAmendement {} déposé le {} : {}'.format(amd['dossier']['titre'], amd['amdt']['numero'], amd['date_depot'], amd['sort'])
+    amd_to_string = '({}) Dossier - {}\n({}) Amendement {} déposé le {} : {}'.format(
+        amd['short_id'], amd['dossier']['titre'], amd['short_id'], amd['amdt']['numero'], amd['date_depot'], amd['sort'])
 
     tweet = amd_to_string.split('\n')
 
@@ -83,7 +84,7 @@ def process_amendement(amd, r):
     link_dossier = cache[amd['dossier']['url']] if amd['dossier']['url'] in cache else shortener.short(amd['dossier']['url'])
     link_texte = cache[amd['url_texte']] if amd['url_texte'] in cache else shortener.short(amd['url_texte'])
 
-    tweet.append('Liens :\n- Amendement: {}\n- Dossier: {}\n- Texte: {}'.format(link_amd, link_dossier, link_texte))
+    tweet.append('({}) Liens :\n- Amendement: {}\n- Dossier: {}\n- Texte: {}'.format(amd['short_id'], link_amd, link_dossier, link_texte))
 
     cache[amd['amdt']['url']] = link_amd
     cache[amd['dossier']['url']] = link_dossier
@@ -112,7 +113,7 @@ def process_amendement(amd, r):
                 'type': 'poll',
                 'choice1': 'Pour',
                 'choice2': 'Contre',
-                'content': '[{}/{}] | (ID:{}) - Qu\'auriez vous voté ?'.format(str(len(tweet) + 1), str(len(tweet) + 1), amd['id']),
+                'content': '[{}/{}] | ({}) - Qu\'auriez vous voté ?'.format(str(len(tweet) + 1), str(len(tweet) + 1), amd['short_id']),
                 'amd_id': amd['id']
             })
 
@@ -129,6 +130,10 @@ def post_on_twitter(api, caps_api, r):
 
         # Poster le tweet puis le supprimer de la liste
         if tweets:
+
+            # Affiche le tweet dans la console pour pouvoir suivre les erreurs
+            print('Contenu : {}\nLength : {}'.format(tweets[0]['content'], len(tweets[0]['content'])))
+
             # Si le tweet doit etre une reponse utiliser id tweet precedent
             if tweets[0]['reply_id']:
                 tweets[0]['reply_id'] = res['id']
@@ -146,7 +151,6 @@ def post_on_twitter(api, caps_api, r):
                 res = api.statuses.update(status=tweets[0]['content'], in_reply_to_status_id=tweets[0]['reply_id'])
 
             # Supprime le tweet de l'array
-            print(tweets[0]['content'])
             tweets.pop(0)
 
         # S'il ne reste plus rien a tweeter, eteindre le programme

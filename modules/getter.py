@@ -61,6 +61,7 @@ def get_amendements_list():
         # Transformation de chaque string en un dictionnaire selon le schema ci-dessus
         response['data_table'][index] = {
             'id': result[0],
+            'short_id': result[0].replace('S-AMANR5L15PO', ''),
             'dossier': {
                 'numero': result[1],
                 'titre': html_charset.unescape(result[2]),
