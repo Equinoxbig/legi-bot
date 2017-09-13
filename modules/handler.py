@@ -126,7 +126,7 @@ def post_on_twitter(api, caps_api, r):
     print('Démarrage de l\'envoi des tweets !')
     while True:
         # Pour eviter les ratelimits twitter (100 req/h)
-        time.sleep(40)
+        time.sleep(120)
 
         # Poster le tweet puis le supprimer de la liste
         if tweets:
